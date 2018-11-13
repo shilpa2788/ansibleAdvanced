@@ -11,20 +11,19 @@
 - name: tell user to finish setting up postgres
   debug:
    msg: "Either uncomment the postgres setup or manually login and initialize"
-#- name: Check if PostgreSQL database is initialized.
- # stat:
-  #  path: "{{ postgresql_data_dir }}/PG_VERSION"
-  #register: pgdata_dir_version
+- name: Check if PostgreSQL database is initialized.
+  stat:
+    path: "{{ postgresql_data_dir }}"
+  register: pgdata_dir_version
 
-#- name: Ensure PostgreSQL database is initialized.
- # command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
-  #when: not pgdata_dir_version.stat.exists
-  #become: yes
-  #become_user: "{{ postgresql_user }}"
-#- name: initilize postgres
-#  command: postgresql-setup initdb
-#- name: initilize postgres some more
-#  command: chkconfig postgresql on
+- name: initilize postgres
+  command: postgresql-setup initdb
+  when: not pgdata_dir_version.stat.exists
+
+- name: initilize postgres some more
+  when: not pgdata_dir_version.stat.exists
+  command: chkconfig postgresql on
+
 - name: start postgres
   service:
    name: postgresql.service

@@ -1,24 +1,3 @@
 ---
 # vars file for roles/db-tier
-postgresql_databases:
-  - name: example_db
-postgresql_user:
-  - name: example_user
-    password: supersecure
-__postgresql_version: "9.5"
-postgresql_data_dir: "/var/lib/postgresql/{{ __postgresql_version }}/main"
-postgresql_bin_path: "/usr/lib/postgresql/{{ __postgresql_version }}/bin"
-postgresql_config_path: "/etc/postgresql/{{ __postgresql_version }}/main"
-postgresql_daemon: postgresql
-postgresql_packages:
-  - postgresql
-  - postgresql-contrib
-  - libpq-dev
-__postgresql_data_dir: "/var/lib/postgresql/{{ __postgresql_version }}/main"
-__postgresql_bin_path: "/usr/lib/postgresql/{{ __postgresql_version }}/bin"
-__postgresql_config_path: "/etc/postgresql/{{ __postgresql_version }}/main"
-__postgresql_daemon: postgresql
-__postgresql_packages:
-  - postgresql
-  - postgresql-contrib
-  - libpq-dev
+postgresql_data_dir: "/var/lib/pgsql/data"
