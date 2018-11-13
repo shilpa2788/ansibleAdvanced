@@ -4,41 +4,28 @@
   #hosts: apps
   #become: yes  
   #tasks:
-    - name: install tomcat
+    - name: install {{ payload }}
       package:
-       name: tomcat
+       name: "{{ payload }}"
        state: latest
     - name: enable tomcat at boot
       service:
-       name: tomcat
+       name: "{{ payload }}"
        enabled: yes
 
     - name: create ansible tomcat directory
       file:
-       path: /usr/share/tomcat/webapps/ROOT
+       path: "{{ tomcat_web_root }}"
        state: directory
 
-    - name: copy static index.html to tomcat webapps/ansible/index.html
+    - name: copy static index.html to {{ payload }} webapps/ansible/index.html
       template:
        src: index.html.j2
-       dest: /usr/share/tomcat/webapps/ROOT/index.html
+       dest: "{{ tomcat_web_root }}/index.html" 
        mode: 0644
 
-    - name: start tomcat
+    - name: restart tomcat
       service:
-       name: tomcat
+       name: "{{ payload }}"
        state: started
-    - name: install apache
-      yum:
-       name: httpd
-       state: latest
-    - name: enable apache at boot
-      service:
-       name: httpd
-       enabled: yes
-    - name: start apache
-      service:
-       name: httpd
-       state: started
-
 

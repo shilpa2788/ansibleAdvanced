@@ -1,0 +1,14 @@
+---
+# tasks file for roles/config
+- name: enable repos
+  template:
+    src: repos_template.j2
+    dest: /etc/yum.repos.d/open_three-tier-app.repo
+    mode: 0644
+- name: install base tools and packages
+  yum:
+    name: "{{ item }}" 
+    state: latest
+  with_items:
+    - httpie
+

@@ -1,32 +1,21 @@
 ---
-- name: Stop firewalld service
-  service:
-   name: firewalld
-   state: stopped
-   enabled: false
-
-- name: http
-  package:
-   name: httpie
-   state: latest
-
-- name: install HAProxy
+- name: install {{ payload }}
   yum:
    name=haproxy state=latest
 
-- name: enable HAProxy
+- name: enable {{ payload }} at boot 
   service:
-   name: haproxy
-   state: started
+   name: "{{ payload }}"
+   enabled: yes
 
-- name: configure haproxy
+- name: configure {{ payload }}  to load  balance  over app servers
   template:
    src: ./haproxy.cfg.j2
    dest: /etc/haproxy/haproxy.cfg
 
-- name: restart HAproxy
+- name: start {{ payload }}
   service:
-   name: haproxy
+   name: "{{ payload }}"
    state: restarted
 
 

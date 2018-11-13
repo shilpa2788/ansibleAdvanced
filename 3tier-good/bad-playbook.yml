@@ -17,13 +17,8 @@
   hosts: all
   gather_facts: false # remove later! speeds up testing
   become: true
-
-  tasks:
-  - name: enable repos
-    template:
-      src: ./open_three-tier-app.repo
-      dest: /etc/yum.repos.d/open_three-tier-app.repo
-      mode: 0644
+  roles:
+   - config
 
 - name: deploy haproxy
   hosts: frontends
@@ -32,34 +27,34 @@
   roles: 
    - lb-tier      
 
-- name: deploy tomcat and apache
+- name: deploy tomcat
   hosts: apps
   gather_facts: false
   become: true
   roles:
    - app-tier
 
-- name: index.html on app 1
-  hosts: app1
-  gather_facts: false
-  become: true
+#- name: index.html on app 1
+ # hosts: app1
+  #gather_facts: false
+  #become: true
 
-  tasks:
-  - name: copy static index.html to tomcat webapps/ansible/index.html
-    template:
-      src: index.html.app1
-      dest: /usr/share/tomcat/webapps/ansible/index.html
+ # tasks:
+  #- name: copy static index.html to tomcat webapps/ansible/index.html
+   # template:
+    #  src: index.html.app1
+     # dest: /usr/share/tomcat/webapps/ansible/index.html
 
-- name: index.html on app 1
-  hosts: app2
-  gather_facts: false
-  become: true
+#- name: index.html on app 1
+ # hosts: app2
+  #gather_facts: false
+  #become: true
 
-  tasks:
-  - name: copy static index.html to tomcat webapps/ansible/index.html
-    template:
-      src: index.html.app2
-      dest: /usr/share/tomcat/webapps/ansible/index.html
+ # tasks:
+ # - name: copy static index.html to tomcat webapps/ansible/index.html
+  #  template:
+   #   src: index.html.app2
+    #  dest: /usr/share/tomcat/webapps/ansible/index.html
 
 - name: deploy postgres
   hosts: apps
@@ -84,4 +79,5 @@
   #become: true
   #hosts: apps
   #roles:
-   #- app-tier
+   #- app-t:wq
+   #ier
