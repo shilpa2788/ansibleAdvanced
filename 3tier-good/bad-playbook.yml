@@ -1,0 +1,87 @@
+---
+# Bad ansible! This playbook is an example of poor/bad practices!
+# Bad practices may include:
+#
+#   Poor formatting and structure
+#   Poor use of YAML - but good enough to parse
+#   Inconsistent style
+#   Incorrect use of modules
+#   Poor module choice
+#   Unclear names
+#   Hard coding / poor use of variables
+#   Roles - what are roles?
+#   Bare variables
+#   No use of handlers
+
+- name: configuration
+  hosts: all
+  gather_facts: false # remove later! speeds up testing
+  become: true
+
+  tasks:
+  - name: enable repos
+    template:
+      src: ./open_three-tier-app.repo
+      dest: /etc/yum.repos.d/open_three-tier-app.repo
+      mode: 0644
+
+- name: deploy haproxy
+  hosts: frontends
+  gather_facts: false # remove later! speeds up testing
+  become: true
+  roles: 
+   - lb-tier      
+
+- name: deploy tomcat and apache
+  hosts: apps
+  gather_facts: false
+  become: true
+  roles:
+   - app-tier
+
+- name: index.html on app 1
+  hosts: app1
+  gather_facts: false
+  become: true
+
+  tasks:
+  - name: copy static index.html to tomcat webapps/ansible/index.html
+    template:
+      src: index.html.app1
+      dest: /usr/share/tomcat/webapps/ansible/index.html
+
+- name: index.html on app 1
+  hosts: app2
+  gather_facts: false
+  become: true
+
+  tasks:
+  - name: copy static index.html to tomcat webapps/ansible/index.html
+    template:
+      src: index.html.app2
+      dest: /usr/share/tomcat/webapps/ansible/index.html
+
+- name: deploy postgres
+  hosts: apps
+  gather_facts: false
+  become: true
+  hosts: appdbs
+  roles:
+   - db-tier
+# only run the next 2 tasks once!
+  #- name: initilize postgres
+  #  command: postgresql-setup initdb
+  #- name: initilize postgres some more
+   # command: chkconfig postgresql on
+  #- name: start postgres
+   # service:
+    #  name: postgresql.service
+     # state: started
+
+#- name: deploy apache
+ # hosts: apps
+  #gather_facts: false
+  #become: true
+  #hosts: apps
+  #roles:
+   #- app-tier
